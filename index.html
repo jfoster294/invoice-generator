@@ -1,1 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <title>Invoice Generator | Joel Foster</title>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <nav class="top-nav">
+        <a href="https://jfoster294.github.io/portfolio-site/" class="back-link">← Portfolio</a>
+        <p>Invoice Generator</p>
+      </nav>
+
+      <section class="hero-content">
+        <p class="eyebrow">Business Tool</p>
+        <h1>Create clean invoices fast.</h1>
+        <p>
+          Add client details, invoice items, tax, discount, calculate totals,
+          save locally, and print a clean invoice layout.
+        </p>
+      </section>
+    </header>
+
+    <section class="stats-grid">
+      <article class="stat-card">
+        <p>Subtotal</p>
+        <h2 id="subtotalDisplay">$0.00</h2>
+      </article>
+
+      <article class="stat-card">
+        <p>Tax</p>
+        <h2 id="taxDisplay">$0.00</h2>
+      </article>
+
+      <article class="stat-card">
+        <p>Discount</p>
+        <h2 id="discountDisplay">$0.00</h2>
+      </article>
+
+      <article class="stat-card">
+        <p>Total</p>
+        <h2 id="totalDisplay">$0.00</h2>
+      </article>
+    </section>
+
+    <section class="invoice-layout">
+      <section class="form-card no-print">
+        <div class="card-header">
+          <h2>Invoice Details</h2>
+          <p>Fill out the invoice and add line items.</p>
+        </div>
+
+        <form id="invoiceForm">
+          <div class="form-grid">
+            <div>
+              <label for="businessNameInput">Business Name</label>
+              <input type="text" id="businessNameInput" placeholder="Example: Joel Foster Web Studio" />
+            </div>
+
+            <div>
+              <label for="businessEmailInput">Business Email</label>
+              <input type="email" id="businessEmailInput" placeholder="you@email.com" />
+            </div>
+
+            <div>
+              <label for="clientNameInput">Client Name</label>
+              <input type="text" id="clientNameInput" placeholder="Client or company name" />
+            </div>
+
+            <div>
+              <label for="clientEmailInput">Client Email</label>
+              <input type="email" id="clientEmailInput" placeholder="client@email.com" />
+            </div>
+
+            <div>
+              <label for="invoiceNumberInput">Invoice Number</label>
+              <input type="text" id="invoiceNumberInput" placeholder="INV-001" />
+            </div>
+
+            <div>
+              <label for="invoiceDateInput">Invoice Date</label>
+              <input type="date" id="invoiceDateInput" />
+            </div>
+
+            <div>
+              <label for="dueDateInput">Due Date</label>
+              <input type="date" id="dueDateInput" />
+            </div>
+
+            <div>
+              <label for="taxRateInput">Tax Rate %</label>
+              <input type="number" id="taxRateInput" min="0" step="0.01" value="0" />
+            </div>
+
+            <div>
+              <label for="discountInput">Discount $</label>
+              <input type="number" id="discountInput" min="0" step="0.01" value="0" />
+            </div>
+          </div>
+
+          <label for="notesInput">Notes</label>
+          <textarea id="notesInput" placeholder="Example: Payment due within 14 days. Thank you for your business."></textarea>
+        </form>
+
+        <div class="line-item-panel">
+          <h2>Add Line Item</h2>
+
+          <div class="line-item-form">
+            <input type="text" id="itemDescriptionInput" placeholder="Description" />
+            <input type="number" id="itemQuantityInput" min="1" step="1" value="1" />
+            <input type="number" id="itemPriceInput" min="0" step="0.01" placeholder="Price" />
+            <button id="addItemButton" type="button">Add Item</button>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button id="saveInvoiceButton" class="primary-button" type="button">Save Invoice</button>
+          <button id="printInvoiceButton" class="secondary-button" type="button">Print Invoice</button>
+          <button id="clearInvoiceButton" class="danger-button" type="button">Clear Invoice</button>
+        </div>
+
+        <p id="saveMessage" class="save-message">Invoice saves locally in your browser.</p>
+      </section>
+
+      <section class="preview-card">
+        <div class="invoice-preview" id="invoicePreview">
+          <div class="invoice-top">
+            <div>
+              <h2 id="previewBusinessName">Your Business</h2>
+              <p id="previewBusinessEmail">business@email.com</p>
+            </div>
+
+            <div class="invoice-title-box">
+              <h1>Invoice</h1>
+              <p id="previewInvoiceNumber">INV-001</p>
+            </div>
+          </div>
+
+          <div class="invoice-info-grid">
+            <div>
+              <h3>Bill To</h3>
+              <p id="previewClientName">Client Name</p>
+              <p id="previewClientEmail">client@email.com</p>
+            </div>
+
+            <div>
+              <h3>Invoice Date</h3>
+              <p id="previewInvoiceDate">Not set</p>
+
+              <h3>Due Date</h3>
+              <p id="previewDueDate">Not set</p>
+            </div>
+          </div>
+
+          <div class="invoice-table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Description</th>
+                  <th>Qty</th>
+                  <th>Price</th>
+                  <th>Total</th>
+                  <th class="no-print">Action</th>
+                </tr>
+              </thead>
+
+              <tbody id="itemsTableBody"></tbody>
+            </table>
+          </div>
+
+          <div class="invoice-bottom">
+            <div class="notes-box">
+              <h3>Notes</h3>
+              <p id="previewNotes">No notes added.</p>
+            </div>
+
+            <div class="totals-box">
+              <div>
+                <span>Subtotal</span>
+                <strong id="previewSubtotal">$0.00</strong>
+              </div>
+
+              <div>
+                <span>Tax</span>
+                <strong id="previewTax">$0.00</strong>
+              </div>
+
+              <div>
+                <span>Discount</span>
+                <strong id="previewDiscount">$0.00</strong>
+              </div>
+
+              <div class="grand-total">
+                <span>Total</span>
+                <strong id="previewTotal">$0.00</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
